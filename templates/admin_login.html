@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — The Cat Voice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,600&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ivory: #fffff0; --brown: #baa68e; --brown-dark: #8a7560;
+      --black: #0d0d0d; --black-mid: #1a1a1a;
+      --font-display: 'Playfair Display', serif;
+      --font-body: 'Barlow', sans-serif;
+      --font-label: 'Barlow Condensed', sans-serif;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    ::selection { background: var(--brown); color: var(--ivory); }
+    body {
+      font-family: var(--font-body);
+      background: var(--black);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(186,166,142,0.03) 60px, rgba(186,166,142,0.03) 61px),
+        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(186,166,142,0.03) 60px, rgba(186,166,142,0.03) 61px);
+      pointer-events: none;
+    }
+    .login-card {
+      background: var(--black-mid);
+      border: 1px solid rgba(186,166,142,0.15);
+      padding: 56px 48px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+    }
+    .login-logo {
+      font-family: var(--font-label);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .login-logo .logo-cat { color: var(--brown); }
+    .login-subtitle {
+      font-family: var(--font-label);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,240,0.35);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .flash-msg {
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-family: var(--font-label);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border-left: 3px solid;
+    }
+    .flash-msg.success { background: rgba(186,166,142,0.1); color: var(--brown); border-color: var(--brown); }
+    .flash-msg.error   { background: rgba(200,50,50,0.1); color: #e88; border-color: #c44; }
+    label {
+      display: block;
+      font-family: var(--font-label);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,240,0.5);
+      margin-bottom: 10px;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,240,0.04);
+      border: 1.5px solid rgba(186,166,142,0.2);
+      color: var(--ivory);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color var(--transition);
+      margin-bottom: 24px;
+      border-radius: 0;
+    }
+    input[type="password"]:focus {
+      border-color: var(--brown);
+    }
+    input[type="password"]::placeholder { color: rgba(255,255,240,0.2); }
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--brown);
+      border: none;
+      color: var(--black);
+      font-family: var(--font-label);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+    }
+    .submit-btn:hover { background: var(--brown-dark); color: var(--ivory); }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 24px;
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,240,0.3);
+      transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--brown); }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-logo">🐱 THE <span class="logo-cat">CAT</span> VOICE</div>
+    <div class="login-subtitle">Admin Panel</div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for cat, msg in messages %}
+        <div class="flash-msg {{ cat }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin_login') }}" id="admin-login-form">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" autofocus required>
+      <button type="submit" class="submit-btn" id="login-submit">Enter Admin Panel →</button>
+    </form>
+
+    <a href="{{ url_for('home') }}" class="back-link" id="back-to-site">← Back to Website</a>
+  </div>
+</body>
+</html>
