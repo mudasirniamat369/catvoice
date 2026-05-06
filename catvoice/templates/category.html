@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category }} Stories — The Cat Voice{% endblock %}
+{% block meta_description %}{{ category }} stories from The Cat Voice by Bisma — Revealing untold stories about {{ category|lower }} from Pakistan.{% endblock %}
+
+{% block extra_styles %}
+<style>
+  /* ══════════════════════════════════════════
+     CATEGORY HERO
+  ══════════════════════════════════════════ */
+  .cat-hero {
+    background: var(--black);
+    padding: 100px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 50% 80% at 80% 50%, rgba(186,166,142,0.07), transparent 70%);
+    pointer-events: none;
+  }
+
+  .cat-hero-inner {
+    display: flex;
+    align-items: flex-end;
+    gap: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cat-bignum {
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 18vw, 14rem);
+    font-weight: 900;
+    color: rgba(186,166,142,0.1);
+    line-height: 1;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .cat-hero-text {}
+
+  .cat-hero-text .cat-badge { margin-bottom: 16px; }
+
+  .cat-hero-text h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    color: var(--ivory);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .cat-hero-text h1 em { color: var(--brown); font-style: italic; }
+
+  .cat-hero-text p {
+    font-size: 0.9rem;
+    color: rgba(255,255,240,0.5);
+    font-family: var(--font-label);
+    letter-spacing: 0.08em;
+  }
+
+  /* ══════════════════════════════════════════
+     CATEGORY STORIES
+  ══════════════════════════════════════════ */
+  .cat-stories {
+    padding: 80px 48px;
+    background: var(--ivory-dark);
+  }
+
+  .stories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--gap);
+    margin-top: 40px;
+  }
+
+  .story-card {
+    background: var(--ivory);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform var(--transition);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .story-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--brown);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+
+  .story-card:hover { transform: translateY(-2px); }
+  .story-card:hover::after { transform: scaleX(1); }
+
+  .story-card .cat-badge { margin-bottom: 16px; }
+
+  .story-card h2 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    color: var(--black);
+    flex: 1;
+  }
+
+  .story-card .excerpt {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--brown-dark);
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .story-card .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid rgba(186,166,142,0.2);
+    margin-top: auto;
+  }
+
+  .card-views { font-family: var(--font-label); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; color: var(--brown-dark); }
+  .card-arrow { color: var(--brown); font-size: 1rem; transition: transform var(--transition); }
+  .story-card:hover .card-arrow { transform: translateX(4px); }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 0;
+    color: var(--brown-dark);
+  }
+
+  .empty-state h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+
+  .empty-state a {
+    color: var(--brown);
+    text-decoration: underline;
+  }
+
+  /* ══════════════════════════════════════════
+     ALL CATEGORIES NAV
+  ══════════════════════════════════════════ */
+  .cat-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 40px;
+  }
+
+  .cat-nav a {
+    font-family: var(--font-label);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border: 1.5px solid rgba(186,166,142,0.3);
+    color: var(--brown-dark);
+    transition: all var(--transition);
+  }
+
+  .cat-nav a:hover,
+  .cat-nav a.active {
+    background: var(--brown);
+    color: var(--black);
+    border-color: var(--brown);
+  }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .cat-hero { padding: 90px 20px 60px; }
+    .cat-hero-inner { flex-direction: column; gap: 20px; align-items: flex-start; }
+    .cat-bignum { font-size: 5rem; }
+    .cat-stories { padding: 60px 20px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══════ CATEGORY HERO ══════ -->
+<section class="cat-hero" aria-label="Category: {{ category }}">
+  <div class="cat-hero-inner">
+    <div class="cat-bignum">{{ stories|length }}</div>
+    <div class="cat-hero-text">
+      <span class="cat-badge">Category</span>
+      <h1>{{ category.split(' ')[0] }} <em>{% if ' ' in category %}{{ category.split(' ')[1:] | join(' ') }}{% endif %}</em></h1>
+      <p>{{ stories|length }} {% if stories|length == 1 %}story{% else %}stories{% endif %} published</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CATEGORY FILTER NAV ══════ -->
+<div style="background: var(--black); padding: 0 48px 40px;" aria-label="Browse other categories">
+  <div class="cat-nav">
+    {% for cat in ['Geopolitics','Mystery','History','Awareness','Conspiracy','Reality Check','Social Issues'] %}
+    <a href="{{ url_for('category', cat=cat) }}"
+       class="{% if cat == category %}active{% endif %}"
+       id="catnav-{{ cat|lower|replace(' ','-') }}">{{ cat }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ══════ STORIES GRID ══════ -->
+<section class="cat-stories" aria-label="{{ category }} Stories">
+  <div class="section-label">{{ category }} Stories</div>
+
+  {% if stories %}
+  <div class="stories-grid">
+    {% for s in stories %}
+    <a href="{{ url_for('story', story_id=s['id']) }}" class="story-card reveal" id="cat-story-{{ s['id'] }}" aria-label="{{ s['title'] }}">
+      <span class="cat-badge">{{ s['category'] }}</span>
+      <h2>{{ s['title'] }}</h2>
+      <p class="excerpt">{{ s['excerpt'] }}</p>
+      <div class="card-footer">
+        <span class="card-views">{{ s['views'] }} views</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h2>No stories yet in {{ category }}.</h2>
+    <p>Check back soon — or <a href="{{ url_for('home') }}">return home</a>.</p>
+  </div>
+  {% endif %}
+</section>
+
+{% endblock %}

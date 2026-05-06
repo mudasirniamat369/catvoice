@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block title %}About Bisma — The Cat Voice{% endblock %}
+{% block meta_description %}The Cat Voice is created by Bisma — a masked Pakistani content creator covering geopolitics, history, conspiracy, and social awareness with nearly 20,000 followers.{% endblock %}
+
+{% block extra_styles %}
+<style>
+  /* ══════════════════════════════════════════
+     ABOUT HERO
+  ══════════════════════════════════════════ */
+  .about-hero {
+    background: var(--black);
+    padding: 120px 48px 100px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(186,166,142,0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .about-hero-inner { position: relative; z-index: 1; }
+
+  .about-cat-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 24px;
+    animation: fadeUp 0.7s ease 0.3s both;
+  }
+
+  .about-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    color: var(--ivory);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    animation: fadeUp 0.7s ease 0.5s both;
+  }
+
+  .about-hero h1 em { color: var(--brown); font-style: italic; }
+
+  .about-hero .hero-sub {
+    font-family: var(--font-label);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,240,0.4);
+    animation: fadeUp 0.7s ease 0.7s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══════════════════════════════════════════
+     ABOUT STORY SECTION
+  ══════════════════════════════════════════ */
+  .about-story {
+    background: var(--ivory);
+    padding: 100px 48px;
+  }
+
+  .about-story-inner {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .about-story-inner p {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--black);
+    margin-bottom: 28px;
+  }
+
+  /* Dropcap */
+  .about-story-inner p:first-child::first-letter {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 4.5rem;
+    color: var(--brown);
+    float: left;
+    line-height: 0.8;
+    margin: 8px 12px 0 0;
+    padding: 0;
+  }
+
+  /* ══════════════════════════════════════════
+     VALUES SECTION
+  ══════════════════════════════════════════ */
+  .values-section {
+    background: var(--black);
+    padding: 100px 48px;
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap);
+    margin-top: 40px;
+  }
+
+  .value-card {
+    padding: 48px 36px;
+    background: rgba(255,255,240,0.02);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition);
+    border-bottom: 2px solid transparent;
+  }
+
+  .value-card:hover {
+    background: rgba(186,166,142,0.06);
+    border-bottom-color: var(--brown);
+  }
+
+  .value-num {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    font-weight: 900;
+    color: rgba(186,166,142,0.1);
+    line-height: 1;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .value-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ivory);
+    margin-bottom: 16px;
+  }
+
+  .value-card p {
+    font-size: 0.9rem;
+    color: rgba(255,255,240,0.5);
+    line-height: 1.75;
+  }
+
+  /* ══════════════════════════════════════════
+     ABOUT STATS
+  ══════════════════════════════════════════ */
+  .about-stats {
+    background: var(--ivory-dark);
+    padding: 80px 48px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--gap);
+    margin-top: 40px;
+  }
+
+  .stat-block {
+    padding: 40px;
+    text-align: center;
+    background: var(--ivory);
+    border-bottom: 2px solid transparent;
+    transition: border-color var(--transition);
+  }
+
+  .stat-block:hover { border-bottom-color: var(--brown); }
+
+  .stat-block .big-num {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--brown);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .stat-block .stat-lbl {
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--brown-dark);
+  }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════ */
+  @media (max-width: 768px) {
+    .about-hero { padding: 100px 20px 80px; }
+    .about-story { padding: 60px 20px; }
+    .values-section { padding: 60px 20px; }
+    .about-stats { padding: 60px 20px; }
+    .values-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══════ ABOUT HERO ══════ -->
+<section class="about-hero" aria-label="About Bisma">
+  <div class="about-hero-inner">
+    <span class="about-cat-icon">🐱</span>
+    <h1>Who Is <em>Bisma</em>?</h1>
+    <div class="hero-sub">The Voice Behind The Mask — Pakistan's Boldest Creator</div>
+  </div>
+</section>
+
+<!-- ══════ ABOUT STORY ══════ -->
+<section class="about-story" aria-label="Bisma's Story">
+  <div class="about-story-inner reveal">
+    {% set about_paragraphs = settings.about_text.split('. ') %}
+    {% if settings.about_text %}
+      {% for para in settings.about_text.split('\n\n') %}
+        {% if para.strip() %}
+          <p>{{ para.strip() }}</p>
+        {% endif %}
+      {% endfor %}
+      {% if settings.about_text.split('\n\n')|length <= 1 %}
+        <p>{{ settings.about_text }}</p>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+<!-- ══════ VALUES ══════ -->
+<section class="values-section" aria-label="Core Values">
+  <div class="section-label" style="color: rgba(255,255,240,0.35);">What We Stand For</div>
+  <div class="values-grid">
+    <div class="value-card reveal">
+      <span class="value-num">01</span>
+      <h3>Truth Over Comfort</h3>
+      <p>We choose the difficult truth every time, even when the comfortable lie would be easier. Reality does not bend to preference — and neither do we.</p>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-num">02</span>
+      <h3>Simplicity Over Complexity</h3>
+      <p>Complex ideas deserve clear language. We break down geopolitics, history, and social issues so that everyone — not just experts — can understand the world they live in.</p>
+    </div>
+    <div class="value-card reveal">
+      <span class="value-num">03</span>
+      <h3>Community Over Audience</h3>
+      <p>You are not just a number. You are a thinking, questioning human being who deserves to be treated as one. This is a community of the awake, not a passive audience.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ STATS ══════ -->
+<section class="about-stats" aria-label="Channel Statistics">
+  <div class="section-label">By the Numbers</div>
+  <div class="stats-grid">
+    <div class="stat-block reveal">
+      <span class="big-num">{{ settings.followers }}</span>
+      <div class="stat-lbl">Followers</div>
+    </div>
+    <div class="stat-block reveal">
+      <span class="big-num">{{ settings.peak_views }}</span>
+      <div class="stat-lbl">Peak Views</div>
+    </div>
+    <div class="stat-block reveal">
+      <span class="big-num">43+</span>
+      <div class="stat-lbl">Videos</div>
+    </div>
+    <div class="stat-block reveal">
+      <span class="big-num">∞</span>
+      <div class="stat-lbl">Truths</div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

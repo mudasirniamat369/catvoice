@@ -1,0 +1,818 @@
+{% extends "base.html" %}
+
+{% block title %}The Cat Voice — Revealing Untold Stories from Pakistan{% endblock %}
+{% block meta_description %}The Cat Voice by Bisma — Pakistan's boldest platform covering geopolitics, mystery, history, conspiracy, and uncomfortable truths. 4.1M peak views.{% endblock %}
+
+{% block extra_styles %}
+<style>
+  /* ══════════════════════════════════════════
+     HERO SECTION
+  ══════════════════════════════════════════ */
+  .hero {
+    min-height: 100vh;
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 48px 160px;
+  }
+
+  /* Radial glow */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% 50%,
+      rgba(186,166,142,0.1) 0%,
+      rgba(90,74,56,0.06) 40%,
+      transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Animated vertical scanning lines */
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .hero-lines span {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, rgba(186,166,142,0.12), transparent);
+    animation: scanLine 8s ease-in-out infinite;
+  }
+
+  .hero-lines span:nth-child(1)  { left: 15%; animation-delay: 0s;    animation-duration: 7s; }
+  .hero-lines span:nth-child(2)  { left: 30%; animation-delay: 1.5s;  animation-duration: 9s; }
+  .hero-lines span:nth-child(3)  { left: 50%; animation-delay: 0.8s;  animation-duration: 6s; }
+  .hero-lines span:nth-child(4)  { left: 70%; animation-delay: 2.2s;  animation-duration: 8s; }
+  .hero-lines span:nth-child(5)  { left: 85%; animation-delay: 0.4s;  animation-duration: 10s; }
+
+  @keyframes scanLine {
+    0%   { opacity: 0; transform: scaleY(0) translateY(-50%); }
+    30%  { opacity: 1; }
+    70%  { opacity: 1; }
+    100% { opacity: 0; transform: scaleY(1.2) translateY(0); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.7s ease 0.3s both;
+  }
+
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--brown);
+    opacity: 0.6;
+  }
+
+  .hero-eyebrow span {
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--brown);
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 900;
+    line-height: 0.95;
+    color: var(--ivory);
+    margin-bottom: 20px;
+    animation: fadeUp 0.7s ease 0.5s both;
+  }
+
+  .hero-title .title-cat {
+    color: var(--brown);
+    font-style: italic;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font-label);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(255,255,240,0.5);
+    margin-bottom: 24px;
+    animation: fadeUp 0.7s ease 0.7s both;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: rgba(255,255,240,0.65);
+    margin-bottom: 40px;
+    animation: fadeUp 0.7s ease 0.9s both;
+  }
+
+  .hero-cats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.7s ease 1.0s both;
+  }
+
+  .hero-cats a {
+    font-family: var(--font-label);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,240,0.55);
+    border: 1px solid rgba(186,166,142,0.25);
+    padding: 6px 14px;
+    transition: all var(--transition);
+  }
+
+  .hero-cats a:hover {
+    color: var(--brown);
+    border-color: var(--brown);
+  }
+
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s ease 1.1s both;
+  }
+
+  .hero-stats {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid rgba(186,166,142,0.12);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    animation: fadeUp 0.7s ease 1.1s both;
+  }
+
+  .stat-item {
+    padding: 24px;
+    text-align: center;
+    border-right: 1px solid rgba(186,166,142,0.12);
+    transition: background var(--transition);
+  }
+
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: rgba(186,166,142,0.04); }
+
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--brown);
+    display: block;
+  }
+
+  .stat-label {
+    font-family: var(--font-label);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,240,0.4);
+    margin-top: 4px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══════════════════════════════════════════
+     TICKER
+  ══════════════════════════════════════════ */
+  .ticker-strip {
+    background: var(--brown);
+    overflow: hidden;
+    height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .ticker-inner {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: ticker 30s linear infinite;
+    gap: 0;
+  }
+
+  .ticker-item {
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--black);
+    padding: 0 32px;
+    flex-shrink: 0;
+  }
+
+  .ticker-dot {
+    color: rgba(13,13,13,0.4);
+    font-size: 0.5rem;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ══════════════════════════════════════════
+     FEATURED STORIES
+  ══════════════════════════════════════════ */
+  .featured-section {
+    padding: 80px 48px;
+    background: var(--ivory);
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--gap);
+    margin-top: 40px;
+  }
+
+  .featured-main {
+    background: var(--black);
+    padding: 56px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform var(--transition);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 520px;
+  }
+
+  .featured-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13,13,13,0.95) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .featured-main:hover { transform: translateY(-2px); }
+
+  .featured-main .story-num {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 900;
+    color: rgba(186,166,142,0.08);
+    line-height: 1;
+    user-select: none;
+  }
+
+  .featured-main .cat-badge { margin-bottom: 20px; position: relative; z-index: 1; }
+
+  .featured-main h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    color: var(--ivory);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .featured-main .excerpt {
+    font-size: 0.95rem;
+    color: rgba(255,255,240,0.6);
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 24px;
+  }
+
+  .featured-main .read-link {
+    font-family: var(--font-label);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--brown);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+    transition: gap var(--transition);
+  }
+
+  .featured-main:hover .read-link { gap: 14px; }
+
+  .featured-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+  }
+
+  .featured-card {
+    background: var(--ivory-deep);
+    padding: 32px;
+    cursor: pointer;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .featured-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--brown);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition);
+  }
+
+  .featured-card:hover { transform: translateY(-2px); }
+  .featured-card:hover::after { transform: scaleX(1); }
+
+  .featured-card .cat-badge { margin-bottom: 12px; }
+
+  .featured-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--black);
+    margin-bottom: 10px;
+  }
+
+  .featured-card .excerpt-sm {
+    font-size: 0.82rem;
+    color: var(--brown-dark);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .featured-card .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(186,166,142,0.2);
+  }
+
+  .card-views {
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--brown-dark);
+  }
+
+  .card-arrow {
+    color: var(--brown);
+    font-size: 1rem;
+    transition: transform var(--transition);
+  }
+
+  .featured-card:hover .card-arrow { transform: translateX(4px); }
+
+  /* ══════════════════════════════════════════
+     CATEGORIES STRIP
+  ══════════════════════════════════════════ */
+  .cat-strip {
+    background: var(--black);
+    padding: 56px 48px;
+  }
+
+  .cat-strip-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--gap);
+    margin-top: 32px;
+  }
+
+  .cat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    background: rgba(255,255,240,0.03);
+    border-top: 2px solid transparent;
+    border-bottom: 1px solid rgba(186,166,142,0.08);
+    text-align: center;
+    transition: all var(--transition);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .cat-item:hover {
+    border-top-color: var(--brown);
+    background: rgba(186,166,142,0.06);
+    transform: translateY(-2px);
+  }
+
+  .cat-icon {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .cat-name {
+    font-family: var(--font-label);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,240,0.55);
+    transition: color var(--transition);
+  }
+
+  .cat-item:hover .cat-name { color: var(--brown); }
+
+  /* ══════════════════════════════════════════
+     ALL STORIES GRID
+  ══════════════════════════════════════════ */
+  .stories-section {
+    padding: 80px 48px;
+    background: var(--ivory-dark);
+  }
+
+  .stories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--gap);
+    margin-top: 40px;
+  }
+
+  .story-card {
+    background: var(--ivory);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform var(--transition);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .story-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--brown);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+
+  .story-card:hover { transform: translateY(-2px); }
+  .story-card:hover::after { transform: scaleX(1); }
+
+  .story-card .cat-badge { margin-bottom: 16px; }
+
+  .story-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    color: var(--black);
+    flex: 1;
+  }
+
+  .story-card .excerpt {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--brown-dark);
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .story-card .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid rgba(186,166,142,0.2);
+    margin-top: auto;
+  }
+
+  .story-card .card-views { font-family: var(--font-label); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; color: var(--brown-dark); }
+  .story-card .card-arrow { color: var(--brown); font-size: 1rem; transition: transform var(--transition); }
+  .story-card:hover .card-arrow { transform: translateX(4px); }
+
+  /* ══════════════════════════════════════════
+     HOME CTA
+  ══════════════════════════════════════════ */
+  .home-cta {
+    padding: 100px 48px;
+    background: var(--black);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .home-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(186,166,142,0.04) 60px, rgba(186,166,142,0.04) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(186,166,142,0.04) 60px, rgba(186,166,142,0.04) 61px);
+    pointer-events: none;
+  }
+
+  .home-cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--ivory);
+    line-height: 1.2;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-cta h2 em {
+    color: var(--brown);
+    font-style: italic;
+  }
+
+  .home-cta .cta-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ══════════════════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .featured-grid { grid-template-columns: 1fr; }
+    .featured-stack { flex-direction: row; }
+    .cat-strip-grid { grid-template-columns: repeat(4, 1fr); }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .hero { padding: 100px 20px 160px; }
+    .featured-section, .stories-section, .cat-strip { padding: 60px 20px; }
+    .home-cta { padding: 80px 20px; }
+    .featured-stack { flex-direction: column; }
+    .hero-ctas { flex-direction: column; }
+    .hero-ctas .btn { width: 100%; justify-content: center; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-stats { display: none; }
+    .cat-strip-grid { grid-template-columns: repeat(3, 1fr); }
+    .stories-section { padding: 40px 20px; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══════ HERO ══════ -->
+<section class="hero" id="hero" aria-label="Hero section">
+  <div class="hero-lines" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span>Est. 2024 — Pakistan</span>
+    </div>
+
+    <h1 class="hero-title">
+      The <span class="title-cat">Cat</span> Voice
+    </h1>
+
+    <div class="hero-subtitle">Revealing Untold Stories</div>
+
+    <p class="hero-tagline">"{{ settings.tagline }}"</p>
+
+    <div class="hero-cats">
+      <a href="{{ url_for('category', cat='Mystery') }}" id="cat-mystery">Mystery</a>
+      <a href="{{ url_for('category', cat='History') }}" id="cat-history">History</a>
+      <a href="{{ url_for('category', cat='Geopolitics') }}" id="cat-geopolitics">Geopolitics</a>
+      <a href="{{ url_for('category', cat='Awareness') }}" id="cat-awareness">Awareness</a>
+      <a href="{{ url_for('category', cat='Conspiracy') }}" id="cat-conspiracy">Conspiracy</a>
+    </div>
+
+    <div class="hero-ctas">
+      <a href="#all-stories" class="btn btn-brown" id="cta-explore">Explore Stories →</a>
+      <a href="{{ settings.instagram }}" target="_blank" rel="noopener" class="btn btn-outline" id="cta-instagram">Follow on Instagram</a>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">{{ settings.followers }}</span>
+      <div class="stat-label">Followers</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">{{ settings.peak_views }}</span>
+      <div class="stat-label">Peak Views</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">{{ total_stories }}</span>
+      <div class="stat-label">Stories</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">∞</span>
+      <div class="stat-label">Truths Uncovered</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TICKER ══════ -->
+<div class="ticker-strip" aria-hidden="true">
+  <div class="ticker-inner">
+    {% set items = ['Geopolitics', 'Mystery', 'History', 'Awareness', 'Hidden Truths', 'Reality Check', 'Conspiracy', 'Social Justice', 'The Untold', 'Breaking Down Complex Issues'] %}
+    {% for _ in range(4) %}
+      {% for item in items %}
+        <span class="ticker-item">{{ item }}</span>
+        <span class="ticker-dot">◆</span>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ══════ FEATURED STORIES ══════ -->
+{% if featured %}
+<section class="featured-section reveal" id="featured-stories" aria-label="Featured Stories">
+  <div class="section-label">Featured Stories</div>
+
+  <div class="featured-grid">
+    <!-- Main Feature (first featured story) -->
+    {% for s in featured %}
+      {% if loop.first %}
+      <a href="{{ url_for('story', story_id=s['id']) }}" class="featured-main" id="featured-main-{{ s['id'] }}" aria-label="Read: {{ s['title'] }}">
+        <div class="story-num">0{{ loop.index }}</div>
+        <span class="cat-badge">{{ s['category'] }}</span>
+        <h2>{{ s['title'] }}</h2>
+        <p class="excerpt">{{ s['excerpt'] }}</p>
+        <span class="read-link">Read Story →</span>
+      </a>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Stacked smaller cards -->
+    <div class="featured-stack">
+      {% for s in featured %}
+        {% if not loop.first %}
+        <a href="{{ url_for('story', story_id=s['id']) }}" class="featured-card" id="featured-card-{{ s['id'] }}" aria-label="Read: {{ s['title'] }}">
+          <div>
+            <span class="cat-badge">{{ s['category'] }}</span>
+            <h3>{{ s['title'] }}</h3>
+            <p class="excerpt-sm">{{ s['excerpt'] }}</p>
+          </div>
+          <div class="card-meta">
+            <span class="card-views">{{ s['views'] }} views</span>
+            <span class="card-arrow">→</span>
+          </div>
+        </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ══════ CATEGORIES STRIP ══════ -->
+<section class="cat-strip reveal" aria-label="Story Categories">
+  <div class="section-label" style="color: rgba(255,255,240,0.4);">Explore by Category</div>
+  <div class="cat-strip-grid">
+    <a href="{{ url_for('category', cat='Geopolitics') }}" class="cat-item" id="strip-geopolitics">
+      <span class="cat-icon">🌍</span>
+      <span class="cat-name">Geopolitics</span>
+    </a>
+    <a href="{{ url_for('category', cat='Mystery') }}" class="cat-item" id="strip-mystery">
+      <span class="cat-icon">🕵️</span>
+      <span class="cat-name">Mystery</span>
+    </a>
+    <a href="{{ url_for('category', cat='History') }}" class="cat-item" id="strip-history">
+      <span class="cat-icon">📜</span>
+      <span class="cat-name">History</span>
+    </a>
+    <a href="{{ url_for('category', cat='Awareness') }}" class="cat-item" id="strip-awareness">
+      <span class="cat-icon">🔔</span>
+      <span class="cat-name">Awareness</span>
+    </a>
+    <a href="{{ url_for('category', cat='Conspiracy') }}" class="cat-item" id="strip-conspiracy">
+      <span class="cat-icon">🔮</span>
+      <span class="cat-name">Conspiracy</span>
+    </a>
+    <a href="{{ url_for('category', cat='Reality Check') }}" class="cat-item" id="strip-reality">
+      <span class="cat-icon">⚡</span>
+      <span class="cat-name">Reality Check</span>
+    </a>
+    <a href="{{ url_for('category', cat='Social Issues') }}" class="cat-item" id="strip-social">
+      <span class="cat-icon">💔</span>
+      <span class="cat-name">Social Issues</span>
+    </a>
+  </div>
+</section>
+
+<!-- ══════ ALL STORIES ══════ -->
+<section class="stories-section" id="all-stories" aria-label="All Stories">
+  <div class="section-label">All Stories</div>
+  <div class="stories-grid">
+    {% for s in all_stories %}
+    <a href="{{ url_for('story', story_id=s['id']) }}" class="story-card reveal" id="story-card-{{ s['id'] }}" aria-label="{{ s['title'] }}" data-index="{{ loop.index0 }}">
+      <span class="cat-badge">{{ s['category'] }}</span>
+      <h3>{{ s['title'] }}</h3>
+      <p class="excerpt">{{ s['excerpt'] }}</p>
+      <div class="card-footer">
+        <span class="card-views">{{ s['views'] }} views</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ══════ HOME CTA ══════ -->
+<section class="home-cta reveal" aria-label="Follow The Cat Voice">
+  <h2>
+    Join <em>{{ settings.followers }}+</em> people who<br>refuse to look away.
+  </h2>
+  <div class="cta-btns">
+    <a href="{{ settings.instagram }}" target="_blank" rel="noopener" class="btn btn-brown" id="cta-insta-bottom">Follow on Instagram</a>
+    <a href="{{ settings.youtube }}" target="_blank" rel="noopener" class="btn btn-outline" id="cta-youtube-bottom">Watch on YouTube</a>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Apply staggered reveal delay from data-index
+  document.querySelectorAll('.story-card[data-index]').forEach(function(el) {
+    var i = parseInt(el.dataset.index, 10);
+    el.style.transitionDelay = ((i % 4) * 0.08) + 's';
+  });
+</script>
+{% endblock %}

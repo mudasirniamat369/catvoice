@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — The Cat Voice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,600&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ivory: #fffff0; --ivory-deep: #f5f0e0; --ivory-dark: #ede8d8;
+      --brown: #baa68e; --brown-dark: #8a7560; --brown-deep: #5a4a38;
+      --black: #0d0d0d; --black-soft: #141414; --black-mid: #1a1a1a;
+      --font-display: 'Playfair Display', serif;
+      --font-body: 'Barlow', sans-serif;
+      --font-label: 'Barlow Condensed', sans-serif;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    ::selection { background: var(--brown); color: var(--ivory); }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--ivory-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--brown); }
+    body { font-family: var(--font-body); background: var(--ivory-dark); color: var(--black); min-height: 100vh; }
+
+    /* ── Admin Nav ── */
+    .admin-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--black);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; height: 56px;
+      border-bottom: 1px solid rgba(186,166,142,0.12);
+    }
+    .admin-logo {
+      font-family: var(--font-label); font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--ivory);
+      text-decoration: none;
+    }
+    .admin-logo .lc { color: var(--brown); }
+    .admin-nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-tab {
+      font-family: var(--font-label); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,240,0.55); text-decoration: none;
+      padding: 8px 16px; transition: all var(--transition); border-radius: 2px;
+    }
+    .nav-tab:hover, .nav-tab.active { color: var(--brown); background: rgba(186,166,142,0.08); }
+    .nav-tab.danger { color: rgba(228,100,100,0.7); }
+    .nav-tab.danger:hover { color: #e44; background: rgba(200,50,50,0.08); }
+
+    /* ── Flash ── */
+    .flash-zone { padding: 0 32px; }
+    .flash-msg {
+      padding: 14px 18px; margin: 12px 0 0;
+      font-family: var(--font-label); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
+      border-left: 3px solid; border-radius: 2px; cursor: pointer;
+    }
+    .flash-msg.success { background: #f0fde8; color: #2d6a1e; border-color: #4caf50; }
+    .flash-msg.error   { background: #fde8e8; color: #8b1919; border-color: #e44; }
+
+    /* ── Stats Bar ── */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 2px; padding: 24px 32px;
+    }
+    .sb-item {
+      background: var(--black-mid); padding: 24px;
+      display: flex; flex-direction: column; gap: 6px;
+      border-bottom: 2px solid transparent; transition: border-color var(--transition);
+    }
+    .sb-item:hover { border-bottom-color: var(--brown); }
+    .sb-num { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--brown); }
+    .sb-label { font-family: var(--font-label); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,240,0.4); }
+
+    /* ── Main Content ── */
+    .admin-main { padding: 0 32px 48px; }
+
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 32px 0 20px;
+    }
+    .panel-header h1 {
+      font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; color: var(--black);
+    }
+    .btn-add {
+      font-family: var(--font-label); font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      background: var(--brown); color: var(--black);
+      padding: 12px 20px; text-decoration: none; border-radius: 2px;
+      transition: background var(--transition);
+    }
+    .btn-add:hover { background: var(--brown-dark); color: var(--ivory); }
+
+    /* ── Table ── */
+    .table-wrap { background: var(--ivory); overflow-x: auto; border-radius: 2px; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    thead th {
+      font-family: var(--font-label); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--brown-dark); background: var(--ivory-deep);
+      padding: 14px 16px; text-align: left;
+      border-bottom: 2px solid rgba(186,166,142,0.2);
+    }
+    tbody tr { border-bottom: 1px solid rgba(186,166,142,0.12); transition: background var(--transition); }
+    tbody tr:hover { background: var(--ivory-deep); }
+    tbody td { padding: 14px 16px; font-size: 0.87rem; vertical-align: middle; }
+    .td-id { font-family: var(--font-label); font-weight: 600; color: var(--brown-dark); width: 48px; }
+    .td-title { font-weight: 600; max-width: 300px; }
+    .td-title a { color: var(--black); text-decoration: none; }
+    .td-title a:hover { color: var(--brown); }
+    .td-cat {
+      font-family: var(--font-label); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--brown); border: 1px solid rgba(186,166,142,0.4);
+      padding: 4px 8px; display: inline-block; white-space: nowrap;
+    }
+    .td-views { font-family: var(--font-label); font-size: 0.8rem; font-weight: 600; color: var(--brown-dark); }
+    .td-featured span { font-size: 1.1rem; }
+    .td-date { font-size: 0.78rem; color: var(--brown-dark); white-space: nowrap; }
+    .td-actions { white-space: nowrap; }
+
+    .action-btn {
+      font-family: var(--font-label); font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 6px 12px; border: 1.5px solid; border-radius: 2px;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      transition: all var(--transition); margin-right: 4px;
+    }
+    .btn-edit { border-color: var(--brown); color: var(--brown); background: transparent; }
+    .btn-edit:hover { background: var(--brown); color: var(--black); }
+    .btn-feature { border-color: rgba(186,166,142,0.4); color: var(--brown-dark); background: transparent; }
+    .btn-feature:hover { border-color: var(--brown-dark); background: var(--ivory-dark); }
+    .btn-feature.is-featured { border-color: var(--brown); color: var(--brown); }
+    .btn-delete { border-color: rgba(200,50,50,0.4); color: #c44; background: transparent; }
+    .btn-delete:hover { background: rgba(200,50,50,0.08); border-color: #c44; }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width: 700px) {
+      .admin-nav { padding: 0 16px; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .admin-main { padding: 0 16px 40px; }
+      .flash-zone { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Admin Nav -->
+  <nav class="admin-nav" role="navigation" aria-label="Admin Navigation">
+    <a href="{{ url_for('home') }}" class="admin-logo">🐱 THE <span class="lc">CAT</span> VOICE</a>
+    <div class="admin-nav-links">
+      <a href="{{ url_for('admin_dashboard') }}" class="nav-tab active" id="tab-stories">Stories</a>
+      <a href="{{ url_for('admin_settings') }}" class="nav-tab" id="tab-settings">Settings</a>
+      <a href="{{ url_for('home') }}" class="nav-tab" target="_blank" id="tab-view-site">View Site</a>
+      <a href="{{ url_for('admin_logout') }}" class="nav-tab danger" id="tab-logout">Logout</a>
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-zone">
+    {% for cat, msg in messages %}
+    <div class="flash-msg {{ cat }}" onclick="this.remove()">{{ msg }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="sb-item">
+      <div class="sb-num">{{ total }}</div>
+      <div class="sb-label">Total Stories</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-num">{{ featured_count }}</div>
+      <div class="sb-label">Featured</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-num">{{ categories_count }}</div>
+      <div class="sb-label">Categories</div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-num">{{ settings.followers }}</div>
+      <div class="sb-label">Followers</div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="admin-main">
+    <div class="panel-header">
+      <h1>All Stories</h1>
+      <a href="{{ url_for('admin_add') }}" class="btn-add" id="btn-add-story">+ Add New Story</a>
+    </div>
+
+    <div class="table-wrap">
+      <table aria-label="Stories table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Views</th>
+            <th>Featured</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in stories %}
+          <tr id="row-story-{{ s['id'] }}">
+            <td class="td-id">{{ s['id'] }}</td>
+            <td class="td-title">
+              <a href="{{ url_for('story', story_id=s['id']) }}" target="_blank">{{ s['title'] }}</a>
+            </td>
+            <td><span class="td-cat">{{ s['category'] }}</span></td>
+            <td class="td-views">{{ s['views'] }}</td>
+            <td class="td-featured"><span>{% if s['featured'] %}⭐{% else %}—{% endif %}</span></td>
+            <td class="td-date">{{ s['date'] }}</td>
+            <td class="td-actions">
+              <a href="{{ url_for('admin_edit', story_id=s['id']) }}" class="action-btn btn-edit" id="edit-{{ s['id'] }}">Edit</a>
+              <a href="{{ url_for('admin_toggle_featured', story_id=s['id']) }}" class="action-btn btn-feature {% if s['featured'] %}is-featured{% endif %}" id="feat-{{ s['id'] }}">{% if s['featured'] %}Unfeature{% else %}Feature{% endif %}</a>
+              <a href="{{ url_for('admin_delete', story_id=s['id']) }}" class="action-btn btn-delete" id="delete-{{ s['id'] }}" data-title="{{ s['title']|e }}" onclick="return confirm('Delete \"' + this.dataset.title + '\"? This cannot be undone.')">Delete</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 40px; color: var(--brown-dark); font-style: italic;">
+              No stories yet. <a href="{{ url_for('admin_add') }}" style="color: var(--brown);">Add the first one.</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Auto-dismiss flash messages
+    document.querySelectorAll('.flash-msg').forEach(msg => {
+      setTimeout(() => {
+        msg.style.opacity = '0'; msg.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => msg.remove(), 400);
+      }, 3500);
+    });
+  </script>
+</body>
+</html>
