@@ -182,7 +182,7 @@ def admin_login():
     if request.method == 'POST':
         password = request.form.get('password', '')
         settings = get_settings()
-        if password == settings.get('password', 'bisma123'):
+        if password == settings.get('password', 'BISMA2020'):
             session['admin'] = True
             flash('Welcome back, Bisma!', 'success')
             return redirect(url_for('admin_dashboard'))
