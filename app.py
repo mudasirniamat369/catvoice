@@ -66,7 +66,7 @@ SETTINGS_DEFAULTS = [
     ('youtube',    'https://youtube.com/@thecatvoice-14?si=-2mHg3NkWpH34m6z'),
     ('email',      'thecatvoice13@gmail.com'),
     ('phone',      '+92 329 3487744'),
-    ('followers',  '57.7K'),
+    ('followers',  '65K'),
     ('peak_views', '4.3M'),
     ('about_text', 'I am the voice for those who have been silenced. In a world where important conversations get buried, ignored, or twisted — I refuse to stay quiet. The Cat Voice was born from one simple belief: that every person deserves to understand the world they live in, no matter how complex, how hidden, or how uncomfortable the truth may be. I break down geopolitics, conspiracy theories, historical events, and social injustices — not for the few who already know, but for the many who deserve to know. Because awareness is not a privilege. It is a right. And yes — I am proudly an ailurophile. A cat lover at heart. Just like cats, I am quietly observant, fiercely independent, and I always land on my feet. That is exactly why The Cat Voice exists — watching, listening, and speaking when it matters most. But this is not just my journey — it is ours. Every view, every comment, every share tells me that you are here, you are listening, and you refuse to look away. We are not just viewers and a creator. We are one voice — standing together against silence.'),
 ]
